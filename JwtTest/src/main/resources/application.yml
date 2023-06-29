@@ -1,0 +1,40 @@
+#Server Port
+server: 
+  port: 8282
+
+spring:
+  #Oracle Setting
+  datasource: 
+    driver-class-name: oracle.jdbc.driver.OracleDriver
+    url: jdbc:oracle:thin:@localhost:1521/xe
+    username: project_test
+    password: test
+
+  mvc:
+    hiddenmethod: 
+      filter: 
+        enabled: true
+    view:
+      prefix: /WEB-INF/views/
+      suffix: .jsp
+  
+  jpa:
+    hibernate:
+      ddl-auto: none
+    properties:
+      hibernate:
+        format_sql: true
+        default_batch_fetch_size: 100
+
+  devtools:
+    restart:
+      enabled: true
+      
+mybatis: 
+  config-location: classpath:configuration.xml
+  mapper-locations: classpath:mappers/**/*.xml
+
+jwt:
+  secret: VlwEyVBsYt9V7zq57TejMnVUyzblYcfPQye08f7MGVA9XkHa
+
+
