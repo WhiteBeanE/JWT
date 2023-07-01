@@ -1,6 +1,7 @@
 package com.bsm.JwtTest.controller;
 
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -9,8 +10,8 @@ import org.springframework.web.bind.annotation.RestController;
 @RequestMapping("/api/v1/reviews")
 public class ReviewController {
 	
-	@PostMapping("")
-	public ResponseEntity<String> writeReview(){
-		return ResponseEntity.ok().body("리뷰등록 완료");
+	@PostMapping
+	public ResponseEntity<String> writeReview(Authentication authentication){
+		return ResponseEntity.ok().body(authentication.getName() + "리뷰등록 완료");
 	}
 }
