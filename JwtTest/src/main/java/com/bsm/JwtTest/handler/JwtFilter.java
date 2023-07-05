@@ -10,24 +10,23 @@ import javax.servlet.http.HttpServletResponse;
 
 import org.springframework.http.HttpHeaders;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
-import org.springframework.security.core.Authentication;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.web.authentication.WebAuthenticationDetailsSource;
+import org.springframework.stereotype.Component;
 import org.springframework.web.filter.OncePerRequestFilter;
 
 import com.bsm.JwtTest.damain.JwtUtil;
-import com.bsm.JwtTest.service.UserService;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
+@Component
 @RequiredArgsConstructor
 @Slf4j
 public class JwtFilter extends OncePerRequestFilter{
 
 	private final JwtUtil jwtUtil;
-	private final UserService userservice;
 
 	@Override
 	protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain)
@@ -45,7 +44,7 @@ public class JwtFilter extends OncePerRequestFilter{
 			return;
 		}
 		// Token 꺼내기
-		String token = authorization.split(" ")[1];
+		final String token = authorization.split(" ")[1];
 		
 		// Token Expired되었는지 확인
 		try {
@@ -70,7 +69,10 @@ public class JwtFilter extends OncePerRequestFilter{
 		
 		// 권한 부여
 		UsernamePasswordAuthenticationToken authenticationToken = 
-				new UsernamePasswordAuthenticationToken(userName, null, List.of(new SimpleGrantedAuthority("rn")));
+				new UsernamePasswordAuthenticationToken(userName, new SimpleGrantedAuthority(jwtUtil.getRole(token)));
+		
+//		UsernamePasswordAuthenticationToken authenticationToken = 
+//				new UsernamePasswordAuthenticationToken(userName, null, jwtUtil.getRole(token).name());
 		// Detail 설정
 		authenticationToken.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
 		SecurityContextHolder.getContext().setAuthentication(authenticationToken);

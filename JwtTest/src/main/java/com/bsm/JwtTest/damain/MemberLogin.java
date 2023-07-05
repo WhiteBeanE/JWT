@@ -10,4 +10,5 @@ import lombok.ToString;
 public class MemberLogin {
 	private String memberId;
 	private String password;
+	private String roles;
 }
