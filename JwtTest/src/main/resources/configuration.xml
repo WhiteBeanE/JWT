@@ -7,7 +7,8 @@
   	</settings>
   	
   	<typeAliases>
-		<!-- <typeAlias alias="Member" type="com.bsm.JwtTest.damain.Member"/> -->
+	  	<typeAlias alias="MemberLogin" type="com.bsm.JwtTest.damain.MemberLogin"/>
+	  	<typeAlias alias="MemberDto" type="com.bsm.JwtTest.damain.MemberDto"/>
   	</typeAliases>
   	
 </configuration>

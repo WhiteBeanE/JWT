@@ -11,9 +11,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
-import com.bsm.JwtTest.damain.JwtUtil;
 import com.bsm.JwtTest.handler.JwtFilter;
-import com.bsm.JwtTest.service.UserService;
 
 import lombok.RequiredArgsConstructor;
 
@@ -22,8 +20,7 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 public class SecurityConfig {
 	
-	private final JwtUtil jwtUtil;
-	private final UserService userService;
+	private final JwtFilter jwtFilter;
 	
 	// JWT용 시큐리티 재설정 기존 시큐리티 하단 주석처리
 	@Bean
@@ -34,7 +31,8 @@ public class SecurityConfig {
 	    	// 인증 허용 범위 설정
 	    	.authorizeRequests()
 		    	.antMatchers("/api/v1/users/login").permitAll()
-				.antMatchers(HttpMethod.POST, "/api/v1/**").authenticated()
+				.antMatchers("/dt/**").hasAnyRole("doctor")
+				.antMatchers("/rn/**").hasAnyRole("rn", "doctor")
 				.anyRequest().authenticated()
 				.and()
 			// JWT를 사용하기 때문에 세션을 사용하지 않는다는 설정
@@ -42,7 +40,7 @@ public class SecurityConfig {
 			.and()
 				// 보안 필터 체인에 사용자 정의 필터를 추가하는 역할
 				// 기본 인증 필터 중 하나인 UsernamePasswordAuthenticationFilter 이전에 사용자 정의 필터인 JwtFilter를 실행하도록 설정
-			.addFilterBefore(new JwtFilter(jwtUtil, userService), UsernamePasswordAuthenticationFilter.class);
+			.addFilterBefore(jwtFilter, UsernamePasswordAuthenticationFilter.class);
 		return httpSecurity.build();
 	}
 	
